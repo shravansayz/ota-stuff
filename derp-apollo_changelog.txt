@@ -1,1 +1,17 @@
-INITIAL
+ROM Changes:
+- November Security Patch
+- Initial Android 15 Stable release
+
+Device Changes:
+- Implement OTA updates
+- Fix USB issue when connecting to pc
+- Fix thermal issues
+- Update Vendor security patch
+- Switch back to AOSP sound effects
+- Completely disable blur
+- Increase zram to 4GB
+
+Note:
+- In order to avoid issues with OTA package installation, it is recommended to switch to this recovery (fastboot flash recovery recovery.im)
+
+  https://github.com/dogpoopy/crave_build/releases/download/11848601210/recovery.img
