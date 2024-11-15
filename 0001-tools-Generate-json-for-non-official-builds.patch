@@ -1,17 +1,17 @@
-From f1f1c08e3bb567566d2b4e26a64f46923866ce7d Mon Sep 17 00:00:00 2001
+From 88be3bb91d75fe9a77e4069206bf73b2a1984c68 Mon Sep 17 00:00:00 2001
 From: dogpoopy <dogpoopy.git@gmail.com>
-Date: Tue, 12 Nov 2024 20:28:56 +0000
-Subject: [PATCH] tools: Allow json to be generated in all builds
+Date: Fri, 15 Nov 2024 04:26:33 +0000
+Subject: [PATCH] tools: Generate json for non-official builds
 
 ---
- tools/generate_json_build_info.sh | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ tools/generate_json_build_info.sh | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
 diff --git a/tools/generate_json_build_info.sh b/tools/generate_json_build_info.sh
-index 6426e36a..34b2111b 100755
+index 6426e36a..0ca95b1f 100755
 --- a/tools/generate_json_build_info.sh
 +++ b/tools/generate_json_build_info.sh
-@@ -11,12 +11,11 @@ if [[ -f $file_path ]]; then
+@@ -11,19 +11,19 @@ if [[ -f $file_path ]]; then
      file_name=$(basename "$file_path")
      device_name=$(echo "$file_name" | cut -d'-' -f5)
      buildprop=${OUT_DIR:-out}/target/product/$device_name/system/build.prop
@@ -25,11 +25,20 @@ index 6426e36a..34b2111b 100755
 +    sha256=$(cut -d' ' -f1 "$file_path".sha256sum)
 +    datetime=$(grep -w ro\\.build\\.date\\.utc "$buildprop" | cut -d= -f2)
 +    link=https://sourceforge.net/projects/derpfest/files/$device_name/$file_name/download
++    rom_type=$(echo "$file_name" | grep -oE "Official|Unofficial|Community")
 +    cat >"$file_path".json <<JSON
  {
    "response": [
      {
-@@ -31,9 +30,6 @@ if [[ -f $file_path ]]; then
+       "datetime": $datetime,
+       "filename": "$file_name",
+       "id": "$sha256",
+-      "romtype": "Official",
++      "romtype": "$rom_type",
+       "size": $file_size,
+       "url": "$link",
+       "version": "15"
+@@ -31,9 +31,6 @@ if [[ -f $file_path ]]; then
    ]
  }
  JSON
@@ -42,5 +51,5 @@ index 6426e36a..34b2111b 100755
 +    echo -e "${GREEN}Done generating ${YELLOW}$device_name.json${NC}"
  fi
 -- 
-2.45.2
+2.46.0
 
